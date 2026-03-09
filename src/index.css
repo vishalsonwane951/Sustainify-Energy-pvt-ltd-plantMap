@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+.leaflet-control-zoom a {
+  margin-bottom: 6px;
+ 
+}
+
+.leaflet-control-zoom {
+  background: none;
+}
