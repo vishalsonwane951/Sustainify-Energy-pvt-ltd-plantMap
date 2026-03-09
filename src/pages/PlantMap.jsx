@@ -2,9 +2,6 @@ import { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import React from "react";
-import { Canvas } from "@react-three/fiber";
-import { TbSolarPanel } from "react-icons/tb";
-import { Stage, OrbitControls, useGLTF } from "@react-three/drei";
 
 /*  India map bounds  */
 const INDIA_BOUNDS = [[6.0, 68.0], [37.5, 97.5]];
@@ -33,42 +30,8 @@ function formatPlantCOD(cod) {
   return `${year}-${month}-${day}`;
 }
 
-// Function For 3D icons
 
-function SolarPanelModel({ url }) {
-  const { scene } = useGLTF(url);
-  return <primitive object={scene} scale={0.5} />;
-}
-
-function SolarPlant3D() {
-  return (
-    <mesh>
-      <boxGeometry args={[1, 0.5, 0.1]} />
-      <meshStandardMaterial color="#f59e0b" />
-    </mesh>
-  );
-}
-
-function ActiveStatus3D() {
-  return (
-    <mesh>
-      <sphereGeometry args={[0.3, 32, 32]} />
-      <meshStandardMaterial color="green" />
-    </mesh>
-  );
-}
-
-function Capacity3D() {
-  return (
-    <mesh>
-      <cylinderGeometry args={[0.2, 0.2, 0.8, 32]} />
-      <meshStandardMaterial color="yellow" />
-    </mesh>
-  );
-}
-
-
-/* ─── Solar Panel Pin Icon ───────────────────────────────────────── */
+// Solar Panel Pin Icon  
 function createSolarIcon(isSelected, status) {
   const active = status === "active";
   const color = isSelected ? "#ef4444" : (active ? "#16a34a" : "#f59e0b");
@@ -86,7 +49,7 @@ function createSolarIcon(isSelected, status) {
   });
 }
 
-/* ─── Fly-to on select ───────────────────────────────────────────── */
+// Fly-to on select 
 function FlyTo({ plant }) {
   const map = useMap();
   useEffect(() => {
@@ -95,7 +58,7 @@ function FlyTo({ plant }) {
   return null;
 }
 
-/* ─── Fit bounds ─────────────────────────────────────────────────── */
+// Fit bounds 
 function FitBounds({ plants }) {
   const map = useMap();
   useEffect(() => {
@@ -115,12 +78,11 @@ function FitBounds({ plants }) {
 }
 
 function SolarPanelIcon({ size = 40 }) {
-  const { scene } = useGLTF("/models/solar_panel.glb"); // put your model in public/models
+  const { scene } = useGLTF("/models/solar_panel.glb");
   return <primitive object={scene} scale={size / 100} />;
 }
 
-/* ─── Stats Row ──────────────────────────────────────────────────── */
-//  import { useState } from "react";
+// Stats Row 
 
 function StatsRow({ plants = [] }) {
   const total = plants.length;
@@ -132,14 +94,14 @@ function StatsRow({ plants = [] }) {
     {
       icon: (
         <svg width="44" height="44" viewBox="0 0 48 48" fill="none">
-          <rect x="4" y="10" width="40" height="26" rx="2" fill="#1e3a5f" stroke="#2d5a8e" strokeWidth="1.5"/>
-          {[0,1,2].map(row => [0,1,2,3].map(col => (
-            <rect key={`${row}-${col}`} x={6+col*9.5} y={12+row*7.5} width={8.5} height={6.5} rx="0.5" fill="#1d4ed8" stroke="#60a5fa" strokeWidth="0.4" opacity="0.9"/>
+          <rect x="4" y="10" width="40" height="26" rx="2" fill="#1e3a5f" stroke="#2d5a8e" strokeWidth="1.5" />
+          {[0, 1, 2].map(row => [0, 1, 2, 3].map(col => (
+            <rect key={`${row}-${col}`} x={6 + col * 9.5} y={12 + row * 7.5} width={8.5} height={6.5} rx="0.5" fill="#1d4ed8" stroke="#60a5fa" strokeWidth="0.4" opacity="0.9" />
           )))}
-          <rect x="4" y="10" width="40" height="8" rx="2" fill="white" opacity="0.06"/>
-          <line x1="24" y1="36" x2="20" y2="42" stroke="#64748b" strokeWidth="2" strokeLinecap="round"/>
-          <line x1="24" y1="36" x2="28" y2="42" stroke="#64748b" strokeWidth="2" strokeLinecap="round"/>
-          <line x1="17" y1="42" x2="31" y2="42" stroke="#64748b" strokeWidth="2.5" strokeLinecap="round"/>
+          <rect x="4" y="10" width="40" height="8" rx="2" fill="white" opacity="0.06" />
+          <line x1="24" y1="36" x2="20" y2="42" stroke="#64748b" strokeWidth="2" strokeLinecap="round" />
+          <line x1="24" y1="36" x2="28" y2="42" stroke="#64748b" strokeWidth="2" strokeLinecap="round" />
+          <line x1="17" y1="42" x2="31" y2="42" stroke="#64748b" strokeWidth="2.5" strokeLinecap="round" />
         </svg>
       ),
       label: "Total Plants",
@@ -152,14 +114,14 @@ function StatsRow({ plants = [] }) {
       icon: (
         <svg width="44" height="44" viewBox="0 0 48 48" fill="none">
           <style>{`@keyframes sun-pulse{0%,100%{opacity:0.15}50%{opacity:0.35}}.sp{animation:sun-pulse 2s ease-in-out infinite}`}</style>
-          <circle className="sp" cx="24" cy="24" r="18" fill="#22c55e"/>
-          {[0,45,90,135,180,225,270,315].map((angle, i) => {
+          <circle className="sp" cx="24" cy="24" r="18" fill="#22c55e" />
+          {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, i) => {
             const rad = (angle * Math.PI) / 180;
-            return <line key={i} x1={24+Math.cos(rad)*14} y1={24+Math.sin(rad)*14} x2={24+Math.cos(rad)*19} y2={24+Math.sin(rad)*19} stroke="#4ade80" strokeWidth="2.5" strokeLinecap="round"/>;
+            return <line key={i} x1={24 + Math.cos(rad) * 14} y1={24 + Math.sin(rad) * 14} x2={24 + Math.cos(rad) * 19} y2={24 + Math.sin(rad) * 19} stroke="#4ade80" strokeWidth="2.5" strokeLinecap="round" />;
           })}
-          <circle cx="24" cy="24" r="9" fill="#16a34a" stroke="#4ade80" strokeWidth="1.5"/>
-          <circle cx="24" cy="24" r="5" fill="#22c55e"/>
-          <path d="M20 24l3 3 5-5" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+          <circle cx="24" cy="24" r="9" fill="#16a34a" stroke="#4ade80" strokeWidth="1.5" />
+          <circle cx="24" cy="24" r="5" fill="#22c55e" />
+          <path d="M20 24l3 3 5-5" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       ),
       label: "Active",
@@ -172,13 +134,13 @@ function StatsRow({ plants = [] }) {
       icon: (
         <svg width="44" height="44" viewBox="0 0 48 48" fill="none">
           <style>{`@keyframes bolt-glow{0%,100%{opacity:0.5}50%{opacity:1}}.bg{animation:bolt-glow 1.5s ease-in-out infinite}`}</style>
-          <circle className="bg" cx="24" cy="24" r="18" fill="#fbbf24" opacity="0.12"/>
-          <rect x="14" y="8" width="20" height="12" rx="1.5" fill="#1e3a5f" stroke="#2d5a8e" strokeWidth="1"/>
-          {[0,1].map(row => [0,1,2].map(col => (
-            <rect key={`${row}-${col}`} x={15.5+col*6} y={9.5+row*5} width={5} height={4} rx="0.3" fill="#1d4ed8" stroke="#60a5fa" strokeWidth="0.3" opacity="0.9"/>
+          <circle className="bg" cx="24" cy="24" r="18" fill="#fbbf24" opacity="0.12" />
+          <rect x="14" y="8" width="20" height="12" rx="1.5" fill="#1e3a5f" stroke="#2d5a8e" strokeWidth="1" />
+          {[0, 1].map(row => [0, 1, 2].map(col => (
+            <rect key={`${row}-${col}`} x={15.5 + col * 6} y={9.5 + row * 5} width={5} height={4} rx="0.3" fill="#1d4ed8" stroke="#60a5fa" strokeWidth="0.3" opacity="0.9" />
           )))}
-          <line x1="24" y1="20" x2="24" y2="25" stroke="#fbbf24" strokeWidth="2" strokeDasharray="2 1"/>
-          <path d="M28 25l-6 9h5l-3 7 8-11h-5l3-5z" fill="#f59e0b" stroke="#fbbf24" strokeWidth="0.8" strokeLinejoin="round"/>
+          <line x1="24" y1="20" x2="24" y2="25" stroke="#fbbf24" strokeWidth="2" strokeDasharray="2 1" />
+          <path d="M28 25l-6 9h5l-3 7 8-11h-5l3-5z" fill="#f59e0b" stroke="#fbbf24" strokeWidth="0.8" strokeLinejoin="round" />
         </svg>
       ),
       label: "Capacity",
@@ -220,7 +182,7 @@ function StatsRow({ plants = [] }) {
   );
 }
 
-/* ─── Plant Card ─────────────────────────────────────────────────── */
+// Plant Card
 function PlantCard({ plant, selected, onClick }) {
   return (
     <div
@@ -228,16 +190,16 @@ function PlantCard({ plant, selected, onClick }) {
       onMouseEnter={e => { if (!selected) { e.currentTarget.style.borderColor = "#86efac"; e.currentTarget.style.background = "#f0fdf4"; } }}
       onMouseLeave={e => { if (!selected) { e.currentTarget.style.borderColor = "#e5e7eb"; e.currentTarget.style.background = "#fafafa"; } }}
       style={{
-  padding: "12px 14px 0px 15px",
-  borderRadius: 10,
-  marginBottom: 7,
-  cursor: "pointer",
-  marginLeft: 15,
-  border: selected ? "1.5px solid #065f46" : "1.5px solid #e5e7eb",
-  background: selected ? "#d1fae6" : "#fafafa",
-  boxShadow: selected ? "0 2px 12px rgba(6,95,70,0.18)" : "none",
-  transition: "all 0.18s",
-}}
+        padding: "12px 14px 0px 15px",
+        borderRadius: 10,
+        marginBottom: 7,
+        cursor: "pointer",
+        marginLeft: 15,
+        border: selected ? "1.5px solid #065f46" : "1.5px solid #e5e7eb",
+        background: selected ? "#d1fae6" : "#fafafa",
+        boxShadow: selected ? "0 2px 12px rgba(6,95,70,0.18)" : "none",
+        transition: "all 0.18s",
+      }}
     >
       <div style={{ padding: 10, borderBottom: "1px solid #eee" }}>
         <div className="flex justify-between items-start" style={{ gap: 6 }}>
@@ -259,7 +221,7 @@ function PlantCard({ plant, selected, onClick }) {
   );
 }
 
-/* ─── Detail Card (map overlay) ─────────────────────────────────── */
+//  Detail Card (map overlay) 
 function DetailCard({ plant, onClose, isMobile }) {
   return (
     <div
@@ -296,7 +258,7 @@ function DetailCard({ plant, onClose, isMobile }) {
   );
 }
 
-/* ─── Main Component ─────────────────────────────────────────────── */
+// Main Component 
 export default function PlantMap() {
   const [selectedPlant, setSelectedPlant] = useState(null);
   const [showList, setShowList] = useState(false);
@@ -402,7 +364,7 @@ export default function PlantMap() {
         .plant-search:focus { outline: none; }
       `}</style>
 
-      {/* ── SECTION TITLE ── */}
+       {/* SECTION TITLE */}
       <div
         className={`${mounted ? "anim-1" : ""}`}
         style={{
@@ -441,7 +403,7 @@ export default function PlantMap() {
         </div>
       </div>
 
-      {/* ── MAIN CONTENT ── */}
+      {/*  MAIN CONTENT  */}
       <div
         className={`flex-1 ${mounted ? "anim-2" : ""}`}
         style={{
@@ -461,7 +423,7 @@ export default function PlantMap() {
           }}
         >
 
-          {/* ── LEFT SIDEBAR ── */}
+          {/*  LEFT SIDEBAR  */}
           {(!isMobile || showList) && (
             <div
               className="flex flex-col overflow-hidden"
@@ -477,7 +439,7 @@ export default function PlantMap() {
 
               <div style={{ padding: "12px 10px 10px", flex: 1, display: "flex", flexDirection: "column" }}>
 
-                {/* ── SEARCH BAR ── */}
+                {/*  SEARCH BAR  */}
                 <div
                   style={{
                     display: "flex",
@@ -526,12 +488,12 @@ export default function PlantMap() {
                   )}
                 </div>
 
-                {/* ── ALL PLANTS LABEL ── */}
+                {/* ALL PLANTS LABEL */}
                 <div style={{ fontFamily: "'Sora',sans-serif", fontSize: 11, fontWeight: 700, color: "#14532d", letterSpacing: 0.5, textTransform: "uppercase", marginBottom: 8, paddingLeft: 4 }}>
                   📋 All Plants ({filteredPlants.length}{searchQuery ? ` of ${plants.length}` : ""})
                 </div>
 
-                {/* ── PLANT LIST ── */}
+                {/* PLANT LIST */}
                 <div
                   className="se-scroll overflow-y-auto"
                   style={{ marginLeft: -15, maxHeight: isMobile ? 300 : 480, flex: 1 }}
@@ -557,7 +519,7 @@ export default function PlantMap() {
             </div>
           )}
 
-          {/* ── MAP ── */}
+          {/* MAP */}
           {(!isMobile || !showList) && (
             <div
               className="relative overflow-hidden"
