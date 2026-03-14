@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import BillAnalysis from "./pages/bill";
 import PlantMap from "./pages/PlantMap";
-import PVProtectServices from "./pages/service1";
+import PVProtectServices from "./pages/services.jsx";
 import BlogsPage from "./pages/blogs.jsx";
 
 function App() {
